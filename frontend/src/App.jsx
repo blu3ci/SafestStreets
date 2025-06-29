@@ -1,15 +1,28 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
+import PageNotFoundPage from "./pages/PageNotFoundPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const [counter, setCounter] = useState(0);
-
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-2">
-      <h1>Counter: {counter}</h1>
-      <Button onClick={() =>  {setCounter(counter + 1)}}>Test</Button>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="sign-up" element={<SignUpPage />} />
+        <Route path="*" element={<PageNotFoundPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

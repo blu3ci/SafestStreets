@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 
 function ProtectedRoute({ children }) {
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [userData, setUserData] = useState({});
 
-    useEffect(() => {
-        auth().catch(() => setIsAuthorized(false))
-    }, [])
+  useEffect(() => {
+    auth().catch(() => setIsAuthorized(false));
+  }, []);
 
   const refreshToken = async () => {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN);

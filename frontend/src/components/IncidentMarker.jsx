@@ -1,4 +1,4 @@
-import api from "../api";
+import api, { apiPrivate } from "../api";
 import {
   Popover,
   PopoverContent,
@@ -15,6 +15,7 @@ import {
   HandThumbUpIcon,
 } from "@heroicons/react/24/solid";
 import { Badge } from "@/components/ui/badge";
+import { prioritizePrivateAPI } from "../utils";
 
 function IncidentMarker({ markerData }) {
   const [rating, setRating] = useState(markerData.likes - markerData.dislikes);
@@ -24,7 +25,7 @@ function IncidentMarker({ markerData }) {
   const [deleted, setDeleted] = useState(false);
 
   const updateRating = () => {
-    api
+    prioritizePrivateAPI()
       .get(`/api/marker/${markerData.id}/`)
       .then((res) => {
         setRating(res.data.likes - res.data.dislikes);
@@ -36,7 +37,7 @@ function IncidentMarker({ markerData }) {
   };
 
   const deleteMarker = () => {
-    api.delete(`/api/marker/delete/${markerData.id}/`).catch((err) => {
+    apiPrivate.delete(`/api/marker/delete/${markerData.id}/`).catch((err) => {
       console.error(err);
     });
     setDeleted(true);
@@ -65,9 +66,9 @@ function IncidentMarker({ markerData }) {
                 <h4 className="text-sm font-semibold">{markerData.reporter}</h4>
 
                 <div className="flex w-full flex-wrap gap-2">
-                  <Badge>pothole</Badge>
-                  <Badge>streetlight</Badge>
-                  <Badge>crime</Badge>
+                  {markerData.tags.map((val, i) => (
+                    <Badge key={i}>{val}</Badge>
+                  ))}
                 </div>
 
                 <div className="text-muted-foreground text-xs">
@@ -80,7 +81,7 @@ function IncidentMarker({ markerData }) {
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  api
+                  apiPrivate
                     .post(`/api/marker/rating/like/${markerData.id}/`)
                     .then((res) => {
                       updateRating();
@@ -105,7 +106,7 @@ function IncidentMarker({ markerData }) {
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  api
+                  apiPrivate
                     .post(`/api/marker/rating/dislike/${markerData.id}/`)
                     .then((res) => {
                       updateRating();
@@ -125,6 +126,14 @@ function IncidentMarker({ markerData }) {
               </Button>
             </div>
           </div>
+          {markerData.description.length > 0 ? (
+            <div className="flex flex-col gap-2">
+              <h1>Description</h1>
+              <p className="text-sm">{markerData.description}</p>
+            </div>
+          ) : (
+            ""
+          )}
           {getUsername() === markerData.reporter ? (
             <Button className="w-full" onClick={deleteMarker}>
               Delete

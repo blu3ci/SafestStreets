@@ -109,8 +109,8 @@ function HomePage() {
     <div>
       <NavBar />
       {!reportIncidentCollpased ? (
-        <div className="h-3/4 w-full max-w-md fixed top-23 left-0 bottom-0 z-20 flex items-start justify-start m-5">
-          <Card className="h-full w-full">
+        <div className="h-full aspect-[1/3] fixed top-0 left-0 z-20 flex items-center mx-5">
+          <Card className="max-w-md w-full">
             <CardHeader>
               <CardAction>
                 <Button
